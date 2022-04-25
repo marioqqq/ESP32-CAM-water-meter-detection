@@ -1,7 +1,7 @@
 # ESP32-CAM-water-meter-detection
 Detect value of water meter using ESP32-CAM module and Raspberry Pi
 
-This project uses ESP32-CAM camera module with modifications (HW and SW) to reduce power consumption. The module send picture to the server via MQTT (Raspberry Pi), where it modifies it, sends it for detection and saves the data. Then data are showed on grafana. 
+This project uses ESP32-CAM camera module with modifications (HW and SW) to reduce power consumption. The module send picture to the server via MQTT (Raspberry Pi), where it modifies it, sends it for detection and saves the data. Then data are showed on grafana. Accuracy of my settings is more then 80%.
 
 # ESP32-CAM
 I used concept of this project ldab/ESP32-CAM-MQTT (https://github.com/ldab/ESP32-CAM-MQTT) and modify source code for my needs. I also made LED ring for better illumination of image. For powering I removed built-in LED and use that pad for powering my LED ring. Then I printed holder that fits on my water meter.
