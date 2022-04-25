@@ -21,5 +21,5 @@ You can use any hardware. I used Raspberry Pi with Raspberry Pi OS, because it's
 # Use
 From all python programs you only need main2.py and values.py. Other programs were only to fine tune filters. In main.py you need to tweak parameters for your needs.
 
-# Final word
+# Final words
 This is my first commit, so if something is not clear or missing, please let me know via issues or via discord (marioqqq#5119). Thanks :)
