@@ -5,12 +5,14 @@ This project uses ESP32-CAM camera module with modifications (HW and SW) to redu
 
 # ESP32-CAM
 I used concept of this project ldab/ESP32-CAM-MQTT (https://github.com/ldab/ESP32-CAM-MQTT) and modify source code for my needs. I also made LED ring for better illumination of image. For powering I removed built-in LED and use that pad for powering my LED ring. Then I printed holder that fits on my water meter.
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/93001533/165036330-9b6be7a9-bf80-417b-b244-fe3f3a429f48.png" alt="Schematic" height="350"/>
   <img src="https://user-images.githubusercontent.com/93001533/165036760-9d0ab7e6-6bdd-4bc4-bec4-07aaecccbb99.png" alt="Holder" height="350"/>
   <img src="https://user-images.githubusercontent.com/93001533/165036355-49c77b59-7057-4476-9c2e-15483e40d283.png" alt="Water meter" height="350"/>
 </p>
 In software I turned off few things and reduced CPU clock frequency to reduce power consumption. I also changed voltage regulator for AP2210N-3.3. And finally I did a hardware modification shown on the schematic. After these modifications, on one charge of 2,5 Ah battery can last 3-4 months, depending on time of main program.
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/93001533/165039323-fad308d3-c15c-46ce-819a-2e651f4b62ac.png" alt="Schematic" width="400"/>
 </p>
