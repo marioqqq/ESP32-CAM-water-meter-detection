@@ -1,0 +1,761 @@
+[
+    {
+        "id": "0561a810b412b571",
+        "type": "subflow",
+        "name": "Cloud-Vision",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "7cd46454dc9f2908"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1380,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "02e1b10605c8084f",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "cc9a254564afe212",
+        "type": "http request",
+        "z": "0561a810b412b571",
+        "name": "Send a request",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 1040,
+        "y": 60,
+        "wires": [
+            [
+                "02e1b10605c8084f",
+                "28484a8532b0df82"
+            ]
+        ]
+    },
+    {
+        "id": "7ec58a05cfbe459c",
+        "type": "function",
+        "z": "0561a810b412b571",
+        "name": "Make a request for the Google Cloud Vision API",
+        "func": "var image = {content: msg.payload.toString('base64')};\nvar features = {type: 'DOCUMENT_TEXT_DETECTION', maxResults: 10};\nvar imageContext = {languageHints: 'ja'};\nvar request = {image: image, features: features, imageContext: imageContext};\nvar requests = {requests: request};\nmsg.payload = requests;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 60,
+        "wires": [
+            [
+                "9455884f9b3e243b"
+            ]
+        ]
+    },
+    {
+        "id": "9455884f9b3e243b",
+        "type": "change",
+        "z": "0561a810b412b571",
+        "name": "Set url and headers",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "https://vision.googleapis.com/v1/images:annotate?key=YOUR KEY",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "Content-Type: application/json",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 830,
+        "y": 60,
+        "wires": [
+            [
+                "cc9a254564afe212"
+            ]
+        ]
+    },
+    {
+        "id": "02e1b10605c8084f",
+        "type": "function",
+        "z": "0561a810b412b571",
+        "name": "Retrieve value",
+        "func": "msg.payload = msg.payload[\"responses\"][\"0\"][\"textAnnotations\"][\"1\"][\"description\"];\nvar input = msg.payload.split(\"K\");\nvar number = input[0];\n\nmsg.payload = number;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1240,
+        "y": 60,
+        "wires": [
+            [
+                "3c57822eb2c70155"
+            ]
+        ]
+    },
+    {
+        "id": "7cd46454dc9f2908",
+        "type": "file in",
+        "z": "0561a810b412b571",
+        "name": "Load Google image",
+        "filename": "/home/pi/shared/main2/google.jpg",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 210,
+        "y": 60,
+        "wires": [
+            [
+                "7ec58a05cfbe459c"
+            ]
+        ]
+    },
+    {
+        "id": "3c57822eb2c70155",
+        "type": "debug",
+        "z": "0561a810b412b571",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1250,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "28484a8532b0df82",
+        "type": "debug",
+        "z": "0561a810b412b571",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d29172ca8e794ed2",
+        "type": "subflow",
+        "name": "Load \"new\" to DB",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "44694a5127ac1d94"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 420,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "23a444091825e446",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "23a444091825e446",
+        "type": "mysql",
+        "z": "d29172ca8e794ed2",
+        "mydb": "fde68fdd8fbb32fd",
+        "name": "New",
+        "x": 310,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "44694a5127ac1d94",
+        "type": "function",
+        "z": "d29172ca8e794ed2",
+        "name": "Insert",
+        "func": "insert = \"INSERT INTO new(value) VALUES (\" + msg.payload + \");\";\nmsg.topic = insert;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "23a444091825e446"
+            ]
+        ]
+    },
+    {
+        "id": "fde68fdd8fbb32fd",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "192.168.100.11",
+        "port": "3306",
+        "db": "home2",
+        "tz": "+01:00",
+        "charset": "UTF8"
+    },
+    {
+        "id": "d7145a3a.b21bd8",
+        "type": "tab",
+        "label": "Home",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "e98f28fc.b4cfa8",
+        "type": "mqtt in",
+        "z": "d7145a3a.b21bd8",
+        "name": "Picture IN",
+        "topic": "test",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "1e5b0632e7cdbc3e",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "1a20178b4911d77c"
+            ]
+        ]
+    },
+    {
+        "id": "29953c8a4bc64a22",
+        "type": "exec",
+        "z": "d7145a3a.b21bd8",
+        "command": "python3 /home/pi/shared/main2/main2.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Home2 script",
+        "x": 310,
+        "y": 140,
+        "wires": [
+            [
+                "0a3bebad4d811e68"
+            ],
+            [
+                "6230e44daeeeec63"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2434c4b6f3c1a299",
+        "type": "exec",
+        "z": "d7145a3a.b21bd8",
+        "command": "python3 /home/pi/shared/main2/values.py",
+        "addpay": "",
+        "append": "-u",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Values script",
+        "x": 890,
+        "y": 140,
+        "wires": [
+            [],
+            [
+                "d1689d2d6984407f"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2b72240d45b4c94b",
+        "type": "inject",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "0 6-22 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "29953c8a4bc64a22",
+                "3bba340894ca1a7c"
+            ]
+        ]
+    },
+    {
+        "id": "6f8b5cd8b9443474",
+        "type": "inject",
+        "z": "d7145a3a.b21bd8",
+        "name": "Values script",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 710,
+        "y": 80,
+        "wires": [
+            [
+                "2434c4b6f3c1a299"
+            ]
+        ]
+    },
+    {
+        "id": "6230e44daeeeec63",
+        "type": "debug",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "62a704f4b41b8399",
+        "type": "inject",
+        "z": "d7145a3a.b21bd8",
+        "name": "Home script",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "29953c8a4bc64a22"
+            ]
+        ]
+    },
+    {
+        "id": "fe3b532b2e81cc11",
+        "type": "subflow:d29172ca8e794ed2",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "x": 690,
+        "y": 140,
+        "wires": [
+            [
+                "2434c4b6f3c1a299",
+                "20b87d59fe7e4623"
+            ]
+        ]
+    },
+    {
+        "id": "ec2e5ef1ba358456",
+        "type": "inject",
+        "z": "d7145a3a.b21bd8",
+        "name": "OCR",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "0a3bebad4d811e68"
+            ]
+        ]
+    },
+    {
+        "id": "1a20178b4911d77c",
+        "type": "file",
+        "z": "d7145a3a.b21bd8",
+        "name": "Save image to folder",
+        "filename": "/home/pi/shared/main/img.jpg",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 340,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d1689d2d6984407f",
+        "type": "debug",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1070,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "20b87d59fe7e4623",
+        "type": "exec",
+        "z": "d7145a3a.b21bd8",
+        "command": "python3 /home/pi/shared/main2/statistics.py",
+        "addpay": "",
+        "append": "-u",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Statistics script",
+        "x": 900,
+        "y": 200,
+        "wires": [
+            [],
+            [
+                "1bd33991ca34e698"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "1bd33991ca34e698",
+        "type": "debug",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "aa0f376ec316184b",
+        "type": "inject",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 720,
+        "y": 200,
+        "wires": [
+            [
+                "20b87d59fe7e4623"
+            ]
+        ]
+    },
+    {
+        "id": "27e7e6102ea1371b",
+        "type": "exec",
+        "z": "d7145a3a.b21bd8",
+        "command": "python3 /home/pi/shared/main2/accuracy.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Accuracy script",
+        "x": 500,
+        "y": 260,
+        "wires": [
+            [],
+            [
+                "27643681fe13eb3e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "27643681fe13eb3e",
+        "type": "debug",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "65e595cba6bcb52b",
+        "type": "inject",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 320,
+        "y": 320,
+        "wires": [
+            [
+                "27e7e6102ea1371b"
+            ]
+        ]
+    },
+    {
+        "id": "0a3bebad4d811e68",
+        "type": "subflow:0561a810b412b571",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "fe3b532b2e81cc11"
+            ]
+        ]
+    },
+    {
+        "id": "3bba340894ca1a7c",
+        "type": "delay",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "10",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "27e7e6102ea1371b"
+            ]
+        ]
+    },
+    {
+        "id": "26a26a96af2c55e8",
+        "type": "mysql",
+        "z": "d7145a3a.b21bd8",
+        "mydb": "fde68fdd8fbb32fd",
+        "name": "New",
+        "x": 610,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "01662ce9d2e9ac1a",
+        "type": "function",
+        "z": "d7145a3a.b21bd8",
+        "name": "Insert",
+        "func": "insert = \"INSERT INTO old(value) VALUES (942);\";\nmsg.topic = insert;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 480,
+        "wires": [
+            [
+                "26a26a96af2c55e8"
+            ]
+        ]
+    },
+    {
+        "id": "81ce5b2cc952dfa3",
+        "type": "inject",
+        "z": "d7145a3a.b21bd8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 310,
+        "y": 500,
+        "wires": [
+            [
+                "01662ce9d2e9ac1a"
+            ]
+        ]
+    },
+    {
+        "id": "1e5b0632e7cdbc3e",
+        "type": "mqtt-broker",
+        "name": "Rpi",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]
