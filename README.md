@@ -11,6 +11,8 @@ I used concept of this project ldab/ESP32-CAM-MQTT (https://github.com/ldab/ESP3
   <img src="https://user-images.githubusercontent.com/93001533/165036760-9d0ab7e6-6bdd-4bc4-bec4-07aaecccbb99.png" alt="Holder" height="350"/>
   <img src="https://user-images.githubusercontent.com/93001533/165036355-49c77b59-7057-4476-9c2e-15483e40d283.png" alt="Water meter" height="350"/>
 </p>
+
+# ESP32-CAM very low power application
 In software I turned off few things and reduced CPU clock frequency to reduce power consumption. I also changed voltage regulator for AP2210N-3.3. And finally I did a hardware modification shown on the schematic. After these modifications, on one charge of 2,5 Ah battery can last 3-4 months, depending on frequency of scanning water meter value per day.
 
 <p align="center">
