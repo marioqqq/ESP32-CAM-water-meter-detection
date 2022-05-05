@@ -27,8 +27,8 @@ You can use any hardware. I used Raspberry Pi with Raspberry Pi OS, because it's
   <img src="https://user-images.githubusercontent.com/93001533/165035822-d5094441-1f8e-47e0-95d2-24953932a834.png" alt="Grafana" height="300"/>
   </p>
 
-# Use
+## Use
 From all python programs you only need main2.py and values.py. Other programs were only to fine tune filters. In main.py you need to tweak parameters for your needs.
 
-# Final words
+## Final words
 This is my first commit, so if something is not clear or missing, please let me know via issues or via discord (marioqqq#5119). Thanks :)
